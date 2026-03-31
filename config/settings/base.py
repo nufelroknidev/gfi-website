@@ -16,6 +16,7 @@ ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=[])
 
 # Application definition
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -87,3 +88,38 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# ── Django Jazzmin (admin UI) ──────────────────────────────────────────────
+JAZZMIN_SETTINGS = {
+    "site_title": "GFI Admin",
+    "site_header": "General Food Industry",
+    "site_brand": "GFI",
+    "welcome_sign": "Welcome to the GFI Admin Panel",
+    "copyright": "General Food Industry Co., Ltd.",
+
+    # Top navigation links
+    "topmenu_links": [
+        {"name": "View Website", "url": "/", "new_window": True},
+    ],
+
+    # Sidebar navigation
+    "show_sidebar": True,
+    "navigation_expanded": True,
+
+    # Hide these default Django apps from the sidebar
+    "hide_apps": ["auth"],
+    "hide_models": [],
+
+    # Custom icons for each app/model in the sidebar
+    "icons": {
+        "products.category": "fas fa-tags",
+        "products.product": "fas fa-box-open",
+        "news.post": "fas fa-newspaper",
+        "contact.inquiry": "fas fa-envelope",
+        "auth.user": "fas fa-user",
+        "auth.group": "fas fa-users",
+    },
+
+    # Show model count in sidebar
+    "show_ui_builder": False,
+}
