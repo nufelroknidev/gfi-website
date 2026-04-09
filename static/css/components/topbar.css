@@ -55,6 +55,46 @@
     color: rgba(255, 255, 255, 0.2);
 }
 
+/* Social icons — brand-coloured pill style */
+.topbar-social {
+    gap: 0.45rem;
+}
+
+.topbar-social-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 6px;
+    font-size: 1rem;
+    color: #fff;
+    text-decoration: none;
+    transition: opacity 0.2s, transform 0.15s;
+}
+
+.topbar-social-link:hover {
+    opacity: 0.85;
+    transform: translateY(-1px);
+    color: #fff;
+}
+
+/* Per-platform brand colours */
+.topbar-social-link[data-brand="linkedin"]  { background-color: var(--brand-linkedin); }
+.topbar-social-link[data-brand="facebook"]  { background-color: var(--brand-facebook); }
+.topbar-social-link[data-brand="instagram"] { background: var(--brand-instagram); }
+.topbar-social-link[data-brand="twitter"]   { background-color: var(--brand-twitter); }
+.topbar-social-link[data-brand="youtube"]   { background-color: var(--brand-youtube); }
+.topbar-social-link[data-brand="tiktok"]    { background-color: var(--brand-tiktok); }
+.topbar-social-link[data-brand="whatsapp"]  { background-color: var(--brand-whatsapp); }
+.topbar-social-link[data-brand="line"]      { background-color: var(--brand-line); }
+.topbar-social-link[data-brand="wechat"]    { background-color: var(--brand-wechat); }
+
+.topbar-sep-left {
+    padding-left: 0.75rem;
+    border-left: 1px solid rgba(255, 255, 255, 0.2);
+}
+
 /* Language picker */
 .topbar-lang-toggle {
     display: flex;

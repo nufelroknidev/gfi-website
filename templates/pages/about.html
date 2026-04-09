@@ -60,7 +60,7 @@
             <div class="col-md-4">
                 <div class="value-card">
                     <div class="value-card__icon-wrap">
-                        <i class="bi bi-handshake value-card__icon"></i>
+                        <i class="bi bi-award-fill value-card__icon"></i>
                     </div>
                     <h5 class="value-card__title">{% trans "Integrity" %}</h5>
                     <p class="value-card__text">{% trans "Transparent pricing, honest communication, and consistent follow-through on every commitment." %}</p>
@@ -108,12 +108,26 @@
             <h2 class="section-title">{% trans "Where to Find Us" %}</h2>
             <p class="text-muted mt-3">{% trans "Based in Bangkok, serving food manufacturers across Southeast Asia." %}</p>
         </div>
-        <div class="map-img-wrap position-relative overflow-hidden rounded shadow-sm">
-            <img src="{% static 'img/map-bangkok.jpg' %}" alt="{% trans 'Bangkok, Thailand' %}" class="w-100 h-100 object-fit-cover">
-            <div class="position-absolute top-50 start-50 translate-middle text-center bg-white bg-opacity-90 rounded px-4 py-3 shadow">
-                <i class="bi bi-geo-alt-fill text-danger fs-3"></i>
-                <p class="mb-0 fw-semibold">{% trans "Bangkok, Thailand" %}</p>
-                <p class="mb-0 small text-muted">{% trans "Serving Southeast Asia" %}</p>
+        <div class="map-embed-wrap">
+            <iframe
+                class="map-embed__frame"
+                src="https://maps.google.com/maps?q=Bangkok,+Thailand&z=13&output=embed"
+                allowfullscreen
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+                title="{% trans 'GFI location — Bangkok, Thailand' %}">
+            </iframe>
+            <div class="map-embed__card">
+                <div class="map-embed__card-icon">
+                    <i class="bi bi-geo-alt-fill"></i>
+                </div>
+                <div>
+                    <p class="map-embed__card-title">{% trans "Bangkok, Thailand" %}</p>
+                    <p class="map-embed__card-sub">{% trans "Serving Southeast Asia" %}</p>
+                    <a href="https://maps.google.com/?q=Bangkok,+Thailand" target="_blank" rel="noopener noreferrer" class="map-embed__card-link">
+                        {% trans "Get Directions" %} <i class="bi bi-arrow-up-right-circle-fill"></i>
+                    </a>
+                </div>
             </div>
         </div>
     </div>

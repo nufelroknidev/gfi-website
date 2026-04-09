@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 from django.test import TestCase
 
 from apps.contact.models import Inquiry
@@ -52,3 +54,15 @@ class ContactFormSubmissionTests(TestCase):
             'message': '',
         })
         self.assertEqual(Inquiry.objects.count(), 0)
+
+    @patch('apps.contact.views.send_mail')
+    def test_valid_form_triggers_email(self, mock_send_mail):
+        self.client.post('/en/contact/', {
+            'name': 'John Smith',
+            'email': 'john@example.com',
+            'subject': 'Product availability',
+            'message': 'I would like to know more about your products.',
+        })
+        self.assertTrue(mock_send_mail.called)
+        subject = mock_send_mail.call_args[1]['subject']
+        self.assertIn('Product availability', subject)

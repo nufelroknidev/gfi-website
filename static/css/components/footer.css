@@ -145,30 +145,37 @@
     color: var(--gfi-vivid-gold);
 }
 
-/* ── Social icons — circular bordered ────────────────────────────────────── */
+/* ── Social icons — brand-coloured pill style ─────────────────────────────── */
 
 .footer-social a {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: var(--footer-dim);
-    font-size: 1rem;
-    transition: background-color var(--gfi-transition),
-                border-color var(--gfi-transition),
-                color var(--gfi-transition),
-                transform var(--gfi-transition);
+    width: 2rem;
+    height: 2rem;
+    border-radius: 6px;
+    font-size: 1.05rem;
+    color: #fff;
+    text-decoration: none;
+    transition: opacity 0.2s, transform 0.15s;
 }
 
 .footer-social a:hover {
-    background-color: var(--gfi-vivid-gold);
-    border-color: var(--gfi-vivid-gold);
-    color: var(--gfi-green-dark);
+    opacity: 0.85;
     transform: translateY(-2px);
+    color: #fff;
 }
+
+.footer-social a[data-brand="linkedin"]   { background-color: var(--brand-linkedin); }
+.footer-social a[data-brand="facebook"]   { background-color: var(--brand-facebook); }
+.footer-social a[data-brand="instagram"]  { background: var(--brand-instagram); }
+.footer-social a[data-brand="twitter"]    { background-color: var(--brand-twitter); }
+.footer-social a[data-brand="youtube"]    { background-color: var(--brand-youtube); }
+.footer-social a[data-brand="tiktok"]     { background-color: var(--brand-tiktok); }
+.footer-social a[data-brand="whatsapp"]   { background-color: var(--brand-whatsapp); }
+.footer-social a[data-brand="line"]       { background-color: var(--brand-line); }
+.footer-social a[data-brand="wechat"]     { background-color: var(--brand-wechat); }
+.footer-social a[data-brand="email"]      { background: var(--brand-email); }
 
 /* ── Bottom bar ───────────────────────────────────────────────────────────── */
 

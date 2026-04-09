@@ -14,11 +14,20 @@
     --gfi-dark:             #1a1f1c;
     --gfi-charcoal-green:   #081c11;
 
+    /* Colour — badge surfaces */
+    --gfi-cert-bg:          #e8f5ee;
+    --gfi-cert-border:      #b2d9c1;
+    --gfi-cert-shadow:      rgba(26, 92, 56, 0.18);
+    --gfi-app-bg:           #fef9e7;
+    --gfi-app-text:         #7a5a00;
+    --gfi-app-border:       #f0d060;
+
     /* Colour — neutral */
     --gfi-bg:               #F9F6F0;
     --gfi-text:             #2C2C2C;
     --gfi-muted:            #6B7280;
     --gfi-border:           #e0dbd0;
+    --gfi-border-light:     #e5e7eb;
 
     /* Shape */
     --gfi-radius:           0.5rem;
@@ -27,7 +36,20 @@
     /* Elevation */
     --gfi-shadow-sm:        0 2px 10px rgba(26, 92, 56, 0.08);
     --gfi-shadow-md:        0 6px 24px rgba(26, 92, 56, 0.14);
+    --gfi-shadow-hover:     0 12px 36px rgba(26, 92, 56, 0.22);
 
     /* Motion */
     --gfi-transition:       0.22s ease;
+
+    /* Third-party brand colours — do not change these */
+    --brand-linkedin:       #0A66C2;
+    --brand-facebook:       #1877F2;
+    --brand-instagram:      radial-gradient(circle at 30% 107%, #fdf497 0%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+    --brand-twitter:        #000;
+    --brand-youtube:        #FF0000;
+    --brand-tiktok:         #010101;
+    --brand-whatsapp:       #25D366;
+    --brand-line:           #06C755;
+    --brand-wechat:         #07C160;
+    --brand-email:          linear-gradient(135deg, #EA4335 0%, #c0392b 100%);
 }

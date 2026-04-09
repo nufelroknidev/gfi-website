@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.core.cache import cache
 from django.utils.translation import get_language
 
 from .models import SiteSettings
@@ -18,6 +19,17 @@ SUPPORTED_LANGUAGES = [
 
 _FALLBACK_LANGUAGE = {'code': '', 'flag': None, 'label': 'Language'}
 
+_SITE_SETTINGS_CACHE_KEY = "site_settings"
+_SITE_SETTINGS_TTL = 300  # seconds — invalidated immediately on admin save
+
+
+def _get_site_settings():
+    obj = cache.get(_SITE_SETTINGS_CACHE_KEY)
+    if obj is None:
+        obj = SiteSettings.load()
+        cache.set(_SITE_SETTINGS_CACHE_KEY, obj, _SITE_SETTINGS_TTL)
+    return obj
+
 
 def site_globals(request):
     lang_code = get_language() or settings.LANGUAGE_CODE
@@ -30,5 +42,5 @@ def site_globals(request):
         'SUPPORTED_LANGUAGES': SUPPORTED_LANGUAGES,
         'LANGUAGE_CODE':       lang_code,
         'CURRENT_LANGUAGE':    current_lang,
-        'SITE_SETTINGS':       SiteSettings.load(),
+        'SITE_SETTINGS':       _get_site_settings(),
     }

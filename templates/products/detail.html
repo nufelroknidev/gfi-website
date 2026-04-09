@@ -1,44 +1,56 @@
 {% extends "base.html" %}
-{% load i18n static %}
+{% load i18n static product_tags %}
 
 {% block title %}{% if product.meta_title %}{{ product.meta_title }}{% else %}{{ product.name }} — {% trans "GFI" %}{% endif %}{% endblock %}
 {% block meta_description %}{% if product.meta_description %}{{ product.meta_description }}{% else %}{% blocktrans with name=product.name %}{{ name }} — food additive available through General Food Industry Co., Ltd.{% endblocktrans %}{% endif %}{% endblock %}
+{% block og_title %}{{ product.name }} — {% trans "GFI" %}{% endblock %}
+{% block og_description %}{% if product.description %}{{ product.description|truncatewords:30 }}{% else %}{% blocktrans with name=product.name %}{{ name }} — food additive available through General Food Industry Co., Ltd.{% endblocktrans %}{% endif %}{% endblock %}
 
 {% block content %}
 
 <section class="page-header">
     <div class="container">
+        <h1 class="section-title mb-2">{{ product.name }}</h1>
+        <p class="mb-0">{{ category.name }}{% if product.cas_number %} &middot; CAS {{ product.cas_number }}{% endif %}</p>
+    </div>
+</section>
+
+<div class="breadcrumb-bar">
+    <div class="container">
         <nav aria-label="breadcrumb">
-            <ol class="breadcrumb mb-3">
-                <li class="breadcrumb-item"><a href="{% url 'products:list' %}">{% trans "Products" %}</a></li>
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="{% url 'products:list' %}"><i class="bi bi-box-seam me-1"></i>{% trans "Products" %}</a></li>
                 <li class="breadcrumb-item"><a href="{% url 'products:category' category.slug %}">{{ category.name }}</a></li>
                 <li class="breadcrumb-item active" aria-current="page">{{ product.name }}</li>
             </ol>
         </nav>
-        <p class="product-detail__category-label mb-1">{{ category.name }}</p>
-        <h1 class="product-detail__name mb-0">{{ product.name }}</h1>
     </div>
-</section>
+</div>
 
-<section class="py-5">
+<section class="pt-5 pb-5">
     <div class="container">
         <div class="row gy-5">
 
             <!-- Image -->
-            <div class="col-md-5">
-                {% if product.image %}
-                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid rounded">
-                {% else %}
-                <div class="img-placeholder">
-                    <span>{% trans "No image available" %}</span>
-                </div>
-                {% endif %}
+            <div class="col-md-5 product-detail__image-col">
+                <div class="product-detail__media-card">
+                    {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-detail__img">
+                    {% else %}
+                    <div class="product-detail__img-placeholder">
+                        <i class="bi bi-image product-detail__img-placeholder-icon"></i>
+                        <span>{% trans "No image available" %}</span>
+                    </div>
+                    {% endif %}
 
-                {% if product.datasheet %}
-                <a href="{{ product.datasheet.url }}" class="btn btn-outline-secondary w-100 mt-3" target="_blank" rel="noopener">
-                    <i class="bi bi-file-earmark-pdf me-2"></i>{% trans "Download Technical Data Sheet" %}
-                </a>
-                {% endif %}
+                    {% if product.datasheet %}
+                    <div class="product-detail__media-card-footer">
+                        <a href="{{ product.datasheet.url }}" class="btn btn-outline-secondary w-100" target="_blank" rel="noopener">
+                            <i class="bi bi-file-earmark-pdf me-2"></i>{% trans "Download Technical Data Sheet" %}
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
             </div>
 
             <!-- Details -->
@@ -75,7 +87,10 @@
                 {% endif %}
 
                 {% if product.description %}
-                <p class="text-muted mb-4">{{ product.description }}</p>
+                <div class="mb-4">
+                    <p class="product-detail__section-label">{% trans "Description" %}</p>
+                    <p class="text-muted mb-0">{{ product.description }}</p>
+                </div>
                 {% endif %}
 
                 <!-- Certifications -->
@@ -104,10 +119,31 @@
 
                 <!-- Specifications -->
                 {% if product.specifications %}
+                {% with rows=product.specifications|parse_specs %}
                 <div class="product-detail__specs mb-4">
                     <h6 class="product-detail__specs-heading">{% trans "Specifications" %}</h6>
-                    <pre class="product-detail__specs-body">{{ product.specifications }}</pre>
+                    {% if rows %}
+                    <table class="product-detail__specs-table">
+                        <tbody>
+                            {% for label, value in rows %}
+                            {% if label %}
+                            <tr>
+                                <th class="product-detail__specs-label">{{ label }}</th>
+                                <td class="product-detail__specs-value">{{ value }}</td>
+                            </tr>
+                            {% else %}
+                            <tr class="product-detail__specs-divider">
+                                <td colspan="2">{{ value }}</td>
+                            </tr>
+                            {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% else %}
+                    <div class="product-detail__specs-body">{{ product.specifications }}</div>
+                    {% endif %}
                 </div>
+                {% endwith %}
                 {% endif %}
 
                 <div class="d-flex flex-wrap gap-3 mt-4">
@@ -136,7 +172,9 @@
                     {% if item.image %}
                     <img src="{{ item.image.url }}" alt="{{ item.name }}" class="product-card__img">
                     {% else %}
-                    <img src="{% static 'img/product-placeholder.jpg' %}" alt="{{ item.name }}" class="product-card__img">
+                    <div class="product-card__img-placeholder">
+                        <i class="bi bi-box-seam"></i>
+                    </div>
                     {% endif %}
                     <div class="product-card__body">
                         <h6 class="product-card__name">{{ item.name }}</h6>

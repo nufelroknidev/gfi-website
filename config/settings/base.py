@@ -19,6 +19,7 @@ ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=[])
 INSTALLED_APPS = [
     'jazzmin',
     'django.contrib.admin',
+    'django_summernote',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -57,6 +58,9 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'apps.pages.context_processors.site_globals',
             ],
+            'libraries': {
+                'product_tags': 'apps.products.templatetags.product_tags',
+            },
         },
     },
 ]
@@ -117,6 +121,26 @@ CONTACT_EMAIL = env('CONTACT_EMAIL', default='info@gfi.example.com')
 # ── Analytics ─────────────────────────────────────────────────────────────────
 GA_TRACKING_ID = env('GA_TRACKING_ID', default='')
 
+# ── Summernote (rich text editor) ─────────────────────────────────────────
+SUMMERNOTE_CONFIG = {
+    "summernote": {
+        "width": "100%",
+        "height": "400px",
+        "toolbar": [
+            ["style", ["bold", "italic", "underline", "clear"]],
+            ["para", ["ul", "ol", "paragraph"]],
+            ["insert", ["link", "picture", "hr"]],
+            ["view", ["fullscreen", "codeview"]],
+        ],
+        "codemirror": {
+            "mode": "htmlmixed",
+            "lineNumbers": True,
+        },
+    },
+    "attachment_upload_to": "news/attachments/",
+    "attachment_filesize_limit": 5 * 1024 * 1024,  # 5 MB
+}
+
 # ── Django Jazzmin (admin UI) ──────────────────────────────────────────────
 JAZZMIN_SETTINGS = {
     "site_title": "GFI Admin",
@@ -130,24 +154,31 @@ JAZZMIN_SETTINGS = {
         {"name": "View Website", "url": "/", "new_window": True},
     ],
 
-    # Sidebar navigation
-    "show_sidebar": True,
-    "navigation_expanded": True,
-
-    # Hide these default Django apps from the sidebar
-    "hide_apps": ["auth"],
-    "hide_models": [],
+    # Hide Groups — staff only need to manage Users
+    "hide_models": ["auth.group"],
 
     # Custom icons for each app/model in the sidebar
     "icons": {
+        "pages.sitesettings": "fas fa-sliders-h",
         "products.category": "fas fa-tags",
+        "products.certification": "fas fa-certificate",
+        "products.application": "fas fa-industry",
         "products.product": "fas fa-box-open",
         "news.post": "fas fa-newspaper",
         "contact.inquiry": "fas fa-envelope",
         "auth.user": "fas fa-user",
-        "auth.group": "fas fa-users",
     },
 
-    # Show model count in sidebar
+    # Disable the runtime UI builder — keeps brand theming locked in
     "show_ui_builder": False,
+}
+
+JAZZMIN_UI_TWEAKS = {
+    "brand_colour": "navbar-success",
+    "accent": "accent-olive",
+    "navbar": "navbar-success navbar-dark",
+    "navbar_fixed": True,
+    "sidebar_fixed": True,
+    "sidebar": "sidebar-dark-success",
+    "sidebar_nav_child_indent": True,
 }

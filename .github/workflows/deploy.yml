@@ -28,7 +28,7 @@ jobs:
         env:
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
           ALLOWED_HOSTS: localhost
-        run: poetry run python manage.py test apps.pages apps.products apps.contact
+        run: poetry run python manage.py test apps.pages apps.products apps.contact apps.news
 
   deploy:
     runs-on: ubuntu-latest
@@ -45,6 +45,7 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
+            set -e
             cd /home/ubuntu/gfi-website
             git pull
             /home/ubuntu/.local/bin/poetry install --only main

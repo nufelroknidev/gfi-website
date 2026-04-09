@@ -11,10 +11,9 @@
                     <p class="footer-tagline mb-4">
                         {% trans "Import, export and distribution of certified food-grade additives and ingredients across Southeast Asia." %}
                     </p>
-                    <div class="footer-social d-flex gap-3">
-                        <a href="#" aria-label="LinkedIn"><i class="bi bi-linkedin"></i></a>
-                        <a href="#" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
-                        <a href="mailto:info@gfi.co.th" aria-label="Email"><i class="bi bi-envelope-fill"></i></a>
+                    <div class="footer-social d-flex gap-3 flex-wrap">
+                        {% include "includes/social_icons.html" %}
+                        <a href="mailto:{{ SITE_SETTINGS.email }}" data-brand="email" aria-label="{% trans 'Email' %}"><i class="bi bi-envelope-fill"></i></a>
                     </div>
                 </div>
 
@@ -30,9 +29,9 @@
                 <div class="col-lg-2 col-md-6 footer-nav-col">
                     <h6 class="footer-heading mb-3"><a href="{% url 'products:list' %}">{% trans "Products" %}</a></h6>
                     <ul class="list-unstyled footer-links mb-0">
-                        <li><a href="{% url 'products:list' %}?category=sweeteners">{% trans "Sweeteners" %}</a></li>
-                        <li><a href="{% url 'products:list' %}?category=preservatives">{% trans "Preservatives" %}</a></li>
-                        <li><a href="{% url 'products:list' %}?category=vitamins-nutrients">{% trans "Vitamins" %}</a></li>
+                        <li><a href="{% url 'products:category' 'sweeteners' %}">{% trans "Sweeteners" %}</a></li>
+                        <li><a href="{% url 'products:category' 'preservatives' %}">{% trans "Preservatives" %}</a></li>
+                        <li><a href="{% url 'products:category' 'vitamins-nutrients' %}">{% trans "Vitamins" %}</a></li>
                     </ul>
                 </div>
 
@@ -41,15 +40,15 @@
                     <ul class="list-unstyled footer-contact-list mb-0">
                         <li>
                             <i class="bi bi-geo-alt-fill"></i>
-                            <a href="#" class="footer-map-link">{% trans "Bangkok, Thailand" %}</a>
+                            <a href="{% if SITE_SETTINGS.map_url %}{{ SITE_SETTINGS.map_url }}{% else %}https://maps.google.com/?q={{ SITE_SETTINGS.address|urlencode }}{% endif %}" target="_blank" rel="noopener noreferrer" class="footer-map-link">{{ SITE_SETTINGS.address }}</a>
                         </li>
                         <li>
                             <i class="bi bi-envelope-fill"></i>
-                            <a href="mailto:info@gfi.co.th">info@gfi.co.th</a>
+                            <a href="mailto:{{ SITE_SETTINGS.email }}">{{ SITE_SETTINGS.email }}</a>
                         </li>
                         <li>
                             <i class="bi bi-telephone-fill"></i>
-                            <span>{% trans "+66 2 000 0000" %}</span>
+                            <a href="tel:{{ SITE_SETTINGS.phone_dialable }}">{{ SITE_SETTINGS.phone }}</a>
                         </li>
                     </ul>
                 </div>

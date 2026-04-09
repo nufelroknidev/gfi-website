@@ -24,15 +24,6 @@
     color: rgba(255, 255, 255, 0.8) !important;
 }
 
-.page-header .product-detail__name,
-.page-header .news-detail__title {
-    color: #fff;
-}
-
-.page-header .product-detail__category-label {
-    color: var(--gfi-vivid-gold);
-}
-
 /* Breadcrumb overrides for dark background */
 .page-header .breadcrumb {
     --bs-breadcrumb-divider-color: rgba(255, 255, 255, 0.4);
@@ -53,4 +44,43 @@
 
 .page-header .breadcrumb-item a:hover {
     text-decoration: underline;
+}
+
+/* ── Breadcrumb bar (sits below the page-header on detail pages) ─────────── */
+
+.breadcrumb-bar {
+    background-color: #fff;
+    border-bottom: 1px solid var(--gfi-border);
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+}
+
+.breadcrumb-bar .breadcrumb {
+    --bs-breadcrumb-divider: "›";
+    --bs-breadcrumb-divider-color: var(--gfi-muted);
+    font-size: 1.1rem;
+    align-items: center;
+    margin: 0;
+}
+
+.breadcrumb-bar .breadcrumb-item + .breadcrumb-item::before {
+    opacity: 0.45;
+    font-size: 1rem;
+    line-height: 1;
+}
+
+.breadcrumb-bar .breadcrumb-item a {
+    color: var(--gfi-green);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.breadcrumb-bar .breadcrumb-item a:hover {
+    text-decoration: underline;
+    color: var(--gfi-green-dark);
+}
+
+.breadcrumb-bar .breadcrumb-item.active {
+    color: var(--gfi-text);
+    font-weight: 600;
 }

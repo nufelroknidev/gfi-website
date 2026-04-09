@@ -28,7 +28,7 @@
 
 .product-empty-state__icon {
     font-size: 2.5rem;
-    color: var(--gfi-slate);
+    color: var(--gfi-muted);
     display: block;
     margin-bottom: 1rem;
     opacity: 0.5;
@@ -43,7 +43,7 @@
 
 .product-empty-state__hint {
     font-size: 0.875rem;
-    color: var(--gfi-slate);
+    color: var(--gfi-muted);
     margin: 0;
 }
 
@@ -91,7 +91,7 @@
     display: block;
     padding: 0.35rem 0.5rem;
     font-size: 0.8rem;
-    color: var(--gfi-slate);
+    color: var(--gfi-muted);
     font-style: italic;
 }
 
@@ -148,12 +148,22 @@
 /* ── Certification badges on cards ───────────────────────────────────────── */
 
 .product-card__ids {
-    font-size: 0.75rem;
-    color: var(--gfi-slate);
-    margin-bottom: 0.4rem;
+    margin-bottom: 0.5rem;
     display: flex;
     flex-wrap: wrap;
-    gap: 0.4rem;
+    gap: 0.35rem;
+}
+
+.product-card__ids span {
+    display: inline-block;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--gfi-green);
+    background-color: var(--gfi-green-faint);
+    border: 1px solid var(--gfi-cert-shadow);
+    border-radius: 3px;
+    padding: 0.1rem 0.45rem;
+    letter-spacing: 0.02em;
 }
 
 .product-card__certs {
@@ -165,11 +175,11 @@
 
 .badge-cert {
     display: inline-block;
-    background-color: #e8f5ee;
+    background-color: var(--gfi-cert-bg);
     color: var(--gfi-green);
-    border: 1px solid #b2d9c1;
+    border: 1px solid var(--gfi-cert-border);
     border-radius: 0.25rem;
-    padding: 0.1rem 0.45rem;
+    padding: 0.1rem 0.65rem;
     font-size: 0.7rem;
     font-weight: 700;
     text-transform: uppercase;
@@ -178,21 +188,78 @@
 
 .badge-cert--lg {
     font-size: 0.8rem;
-    padding: 0.25rem 0.6rem;
+    padding: 0.25rem 0.8rem;
 }
 
 .badge-app {
     display: inline-block;
-    background-color: #fef9e7;
-    color: #7a5a00;
-    border: 1px solid #f0d060;
+    background-color: var(--gfi-app-bg);
+    color: var(--gfi-app-text);
+    border: 1px solid var(--gfi-app-border);
     border-radius: 0.25rem;
-    padding: 0.25rem 0.6rem;
+    padding: 0.25rem 0.8rem;
     font-size: 0.8rem;
     font-weight: 600;
 }
 
 /* ── Product detail page ──────────────────────────────────────────────────── */
+
+@media (min-width: 768px) {
+    .product-detail__image-col {
+        position: sticky;
+        top: 108px;
+        align-self: flex-start;
+    }
+}
+
+.product-detail__media-card {
+    background-color: #fff;
+    border: 1px solid var(--gfi-border);
+    border-radius: var(--gfi-radius);
+    padding: 0.6rem;
+    box-shadow: var(--gfi-shadow-md);
+    transition: box-shadow 0.25s ease;
+}
+
+.product-detail__media-card:hover {
+    box-shadow: var(--gfi-shadow-hover);
+}
+
+.product-detail__media-card-footer {
+    padding: 1rem;
+    border-top: 1px solid var(--gfi-border);
+}
+
+.product-detail__img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    display: block;
+    border-radius: calc(var(--gfi-radius) - 2px);
+}
+
+.product-detail__img-placeholder {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    background-color: var(--gfi-green-faint);
+    border: 1px solid var(--gfi-green-light);
+    border-radius: var(--gfi-radius);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    color: var(--gfi-muted);
+    font-size: 0.875rem;
+}
+
+.product-detail__img-placeholder-icon {
+    font-size: 2.5rem;
+    color: var(--gfi-green-light);
+    opacity: 0.6;
+}
+
+
 
 .product-detail__category-label {
     color: var(--gfi-vivid-gold);
@@ -228,9 +295,9 @@
 .product-detail__id-label {
     font-size: 0.65rem;
     text-transform: uppercase;
-    letter-spacing: 0.07em;
-    color: var(--gfi-slate);
-    font-weight: 600;
+    letter-spacing: 0.05em;
+    color: var(--gfi-text);
+    font-weight: 800;
 }
 
 .product-detail__id-value {
@@ -245,7 +312,7 @@
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.07em;
-    color: var(--gfi-slate);
+    color: var(--gfi-muted);
     margin-bottom: 0.5rem;
 }
 
@@ -255,6 +322,7 @@
     background-color: #fff;
     padding: 1.5rem;
     box-shadow: var(--gfi-shadow-sm);
+    overflow-x: auto;
 }
 
 .product-detail__specs-heading {
@@ -270,4 +338,48 @@
     white-space: pre-wrap;
     margin: 0;
     line-height: 1.75;
+}
+
+.product-detail__specs-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+}
+
+.product-detail__specs-table tbody tr:nth-child(odd) {
+    background-color: var(--gfi-green-faint);
+}
+
+.product-detail__specs-table tbody tr:nth-child(even) {
+    background-color: #fff;
+}
+
+.product-detail__specs-label {
+    width: 42%;
+    padding: 0.55rem 0.85rem;
+    color: var(--gfi-text);
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    border-right: 2px solid var(--gfi-green-light);
+    vertical-align: top;
+}
+
+.product-detail__specs-value {
+    padding: 0.55rem 0.85rem;
+    color: var(--gfi-green);
+    font-weight: 600;
+    vertical-align: top;
+}
+
+.product-detail__specs-divider td {
+    padding: 0.4rem 0.85rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--gfi-muted);
+    background-color: #fff !important;
+    border-top: 1px solid var(--gfi-border);
 }

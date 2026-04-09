@@ -2,7 +2,7 @@
 {% load i18n static %}
 
 {% block title %}{% if post.meta_title %}{{ post.meta_title }}{% else %}{{ post.title }} — {% trans "GFI" %}{% endif %}{% endblock %}
-{% block meta_description %}{% if post.meta_description %}{{ post.meta_description }}{% else %}{{ post.content|truncatewords:25 }}{% endif %}{% endblock %}
+{% block meta_description %}{% if post.meta_description %}{{ post.meta_description }}{% else %}{{ post.content|striptags|truncatewords:25 }}{% endif %}{% endblock %}
 
 {% block content %}
 
@@ -31,7 +31,7 @@
             </div>
             <div class="col-md-7">
                 <div class="news-detail__content">
-                    {{ post.content|linebreaks }}
+                    {{ post.content|safe }}
                 </div>
                 <div class="mt-5">
                     <a href="{% url 'news:list' %}" class="btn btn-outline-secondary">

@@ -1,5 +1,8 @@
+import json
+
 from django.db import connection
 from django.db.models import Q
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.core.paginator import Paginator
 
@@ -160,6 +163,40 @@ def product_search(request):
             q
         )
     return render(request, 'products/search.html', {'products': products, 'q': q})
+
+
+def search_suggest(request):
+    """Return up to 5 categories + 5 products matching `q` as JSON."""
+    from django.urls import reverse
+    q = request.GET.get('q', '').strip()
+    if len(q) < 2:
+        return JsonResponse({'categories': [], 'products': []})
+
+    categories = (
+        Category.objects
+        .filter(name__icontains=q)
+        .order_by('order', 'name')[:5]
+    )
+    products_qs = Product.objects.filter(is_active=True).select_related('category')
+    products_qs = _search_products(products_qs, q)[:5]
+
+    return JsonResponse({
+        'categories': [
+            {
+                'name': c.name,
+                'url':  reverse('products:category', args=[c.slug]),
+            }
+            for c in categories
+        ],
+        'products': [
+            {
+                'name':     p.name,
+                'category': p.category.name,
+                'url':      reverse('products:detail', args=[p.category.slug, p.slug]),
+            }
+            for p in products_qs
+        ],
+    })
 
 
 def product_detail(request, category_slug, slug):

@@ -16,6 +16,27 @@ class SiteSettings(models.Model):
         default="info@gfi.co.th",
         help_text="Contact email displayed in the top bar and contact page.",
     )
+    address = models.CharField(
+        max_length=200,
+        default="Bangkok, Thailand",
+        help_text="Office address displayed in the footer and contact page.",
+    )
+    map_url = models.URLField(
+        max_length=500,
+        blank=True,
+        help_text="Google Maps link for the office location. Paste the share URL from Google Maps (e.g. https://maps.google.com/?q=...).",
+    )
+
+    # Social media — leave blank to hide the icon from the website
+    linkedin_url = models.URLField(max_length=500, blank=True, help_text="LinkedIn company page URL. Leave blank to hide.")
+    facebook_url = models.URLField(max_length=500, blank=True, help_text="Facebook page URL. Leave blank to hide.")
+    instagram_url = models.URLField(max_length=500, blank=True, help_text="Instagram profile URL. Leave blank to hide.")
+    twitter_url = models.URLField(max_length=500, blank=True, help_text="X (Twitter) profile URL. Leave blank to hide.")
+    youtube_url = models.URLField(max_length=500, blank=True, help_text="YouTube channel URL. Leave blank to hide.")
+    tiktok_url = models.URLField(max_length=500, blank=True, help_text="TikTok profile URL. Leave blank to hide.")
+    whatsapp_url = models.URLField(max_length=500, blank=True, help_text="WhatsApp Business link (e.g. https://wa.me/66812345678). Leave blank to hide.")
+    line_url = models.URLField(max_length=500, blank=True, help_text="LINE Official Account URL or add-friend link. Leave blank to hide.")
+    wechat_id = models.CharField(max_length=100, blank=True, help_text="WeChat Official Account ID. Leave blank to hide.")
 
     class Meta:
         verbose_name = "Site Settings"
@@ -24,9 +45,17 @@ class SiteSettings(models.Model):
     def __str__(self):
         return "Site Settings"
 
+    @property
+    def wechat_url(self):
+        if not self.wechat_id:
+            return None
+        return f"https://weixin.qq.com/r/{self.wechat_id}"
+
     def save(self, *args, **kwargs):
         self.pk = 1
         super().save(*args, **kwargs)
+        from django.core.cache import cache
+        cache.delete("site_settings")
 
     @classmethod
     def load(cls):

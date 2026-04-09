@@ -113,7 +113,7 @@ class Product(SEOMixin):
         help_text="Technical data sheet or MSDS (PDF). Displayed as a download on the product page.",
     )
 
-    is_active = models.BooleanField(default=True, help_text="Uncheck to hide this product from the website.")
+    is_active = models.BooleanField(default=True, db_index=True, help_text="Uncheck to hide this product from the website.")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

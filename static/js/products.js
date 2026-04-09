@@ -198,7 +198,10 @@
                                 history.replaceState(null, '', url);
                                 bindLoadMore();
                             })
-                            .catch(() => {});
+                            .catch(() => {
+                                /* Network error — leave the grid as-is so the user
+                                   still sees the last valid results. */
+                            });
                     }, 350);
                 });
             }

@@ -1,15 +1,19 @@
 from django.contrib import admin
 from django.utils.html import format_html
+from django_summernote.admin import SummernoteModelAdmin
 
 from .models import Post
 
 
 @admin.register(Post)
-class PostAdmin(admin.ModelAdmin):
+class PostAdmin(SummernoteModelAdmin):
+    summernote_fields = ("content",)
     list_display = ("title", "published_date", "is_published", "image_preview", "updated_at")
     list_filter = ("is_published",)
     list_editable = ("is_published",)
-    search_fields = ("title",)
+    search_fields = ("title", "content")
+    date_hierarchy = "published_date"
+    save_on_top = True
     prepopulated_fields = {"slug": ("title",)}
     readonly_fields = ("created_at", "updated_at", "image_preview")
 

@@ -20,6 +20,10 @@ urlpatterns = [
     path('robots.txt', TemplateView.as_view(template_name='robots.txt', content_type='text/plain')),
 ]
 
+urlpatterns += [
+    path('summernote/', include('django_summernote.urls')),
+]
+
 urlpatterns += i18n_patterns(
     path('admin/', admin.site.urls),
     path('', include('apps.pages.urls')),

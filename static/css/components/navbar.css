@@ -8,7 +8,7 @@
 
 .navbar-gfi {
     background-color: #fff;
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: 1px solid var(--gfi-border-light);
     min-height: 72px;
     padding-bottom: 0;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
@@ -213,7 +213,7 @@
     margin-left: 1.1rem;
     margin-right: 1.1rem;
     max-width: 3rem;
-    overflow: hidden;
+    overflow: visible;
     transition: max-width 0.55s ease, flex 0.55s ease, margin 0.55s ease;
 }
 
@@ -397,6 +397,11 @@
         flex: 1 1 auto;
         display: flex;
         justify-content: flex-end;
+        overflow: visible;
+    }
+
+    .navbar-gfi .navbar-nav {
+        overflow: visible;
     }
 }
 
@@ -438,6 +443,90 @@
     .navbar-gfi .nav-cta {
         font-size: 0.975rem;
     }
+}
+
+/* ── Live-search dropdown ─────────────────────────────────────────────────── */
+
+.nav-search-dropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    min-width: 280px;
+    max-height: 320px;
+    overflow-y: auto;
+    background: #fff;
+    border: 1px solid var(--gfi-border);
+    border-radius: var(--gfi-radius);
+    box-shadow: var(--gfi-shadow-md);
+    z-index: 9999;
+    padding: 0.35rem 0;
+}
+
+.nav-search-dropdown--visible {
+    display: block;
+}
+
+.nav-search-group {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--gfi-muted);
+    margin: 0;
+    padding: 0.5rem 0.9rem 0.2rem;
+}
+
+.nav-search-row {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.45rem 0.9rem;
+    color: var(--gfi-text);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: background-color 0.15s;
+}
+
+.nav-search-row:hover,
+.nav-search-row:focus {
+    background-color: rgba(26, 92, 56, 0.07);
+    color: var(--gfi-green);
+    outline: none;
+}
+
+.nav-search-row i {
+    font-size: 0.95rem;
+    color: var(--gfi-green);
+    flex-shrink: 0;
+}
+
+.nav-search-row__name {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.nav-search-row__sub {
+    font-size: 0.75rem;
+    color: var(--gfi-muted);
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.nav-search-empty {
+    margin: 0;
+    padding: 0.75rem 0.9rem;
+    font-size: 0.875rem;
+    color: var(--gfi-muted);
+    font-style: italic;
+}
+
+/* Position context for the dropdown */
+.nav-search-inline {
+    position: relative;
 }
 
 /* ── Search results card ──────────────────────────────────────────────────── */

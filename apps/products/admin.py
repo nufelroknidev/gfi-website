@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.db.models import Count
 from django.utils.html import format_html
 
 from .models import Application, Category, Certification, Product
@@ -8,6 +9,7 @@ from .models import Application, Category, Certification, Product
 class CertificationAdmin(admin.ModelAdmin):
     list_display = ("name", "slug", "order")
     list_editable = ("order",)
+    search_fields = ("name",)
     prepopulated_fields = {"slug": ("name",)}
 
 
@@ -15,6 +17,7 @@ class CertificationAdmin(admin.ModelAdmin):
 class ApplicationAdmin(admin.ModelAdmin):
     list_display = ("name", "slug", "order")
     list_editable = ("order",)
+    search_fields = ("name",)
     prepopulated_fields = {"slug": ("name",)}
 
 
@@ -24,10 +27,15 @@ class CategoryAdmin(admin.ModelAdmin):
     list_editable = ("order",)
     search_fields = ("name",)
     prepopulated_fields = {"slug": ("name",)}
+    readonly_fields = ("image_preview",)
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).annotate(_product_count=Count("products"))
 
     def product_count(self, obj):
-        return obj.products.count()
+        return obj._product_count
     product_count.short_description = "Products"
+    product_count.admin_order_field = "_product_count"
 
     def image_preview(self, obj):
         if obj.image:
@@ -42,6 +50,8 @@ class ProductAdmin(admin.ModelAdmin):
     list_filter = ("category", "is_active", "origin", "certifications", "applications")
     search_fields = ("name", "cas_number", "e_number", "alternative_names", "description")
     list_editable = ("is_active",)
+    list_select_related = ("category",)
+    save_on_top = True
     prepopulated_fields = {"slug": ("name",)}
     readonly_fields = ("created_at", "updated_at", "image_preview")
     filter_horizontal = ("certifications", "applications")

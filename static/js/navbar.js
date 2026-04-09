@@ -65,8 +65,21 @@
     const closeBtn   = document.getElementById('searchClose');
     const input      = nav.querySelector('.nav-search-inline-input');
     const searchItem = nav.querySelector('.nav-search-item');
+    const dropdown   = document.getElementById('searchDropdown');
+    const form       = nav.querySelector('.nav-search-inline');
 
-    if (!toggle || !closeBtn || !input || !searchItem) return;
+    if (!toggle || !closeBtn || !input || !searchItem || !dropdown || !form) return;
+
+    const suggestUrl = form.dataset.suggestUrl;
+
+    /* ── State ─────────────────────────────────────────────────────────────── */
+
+    let lastResults   = { categories: [], products: [] };
+    let debounceTimer = null;
+    let idleTimer     = null;
+    let hoverCloseTimer = null;
+
+    /* ── Open / close ──────────────────────────────────────────────────────── */
 
     const openSearch = () => {
         nav.classList.remove('search-hover');
@@ -84,16 +97,21 @@
         input.focus();
     };
 
+    const hideDropdown = () => {
+        dropdown.classList.remove('nav-search-dropdown--visible');
+        dropdown.innerHTML = '';
+    };
+
     const closeSearch = () => {
         nav.classList.remove('search-open', 'search-hover');
         toggle.setAttribute('aria-expanded', 'false');
         input.setAttribute('tabindex', '-1');
         closeBtn.setAttribute('tabindex', '-1');
         input.value = '';
+        hideDropdown();
     };
 
-    /* Auto-cancel after 10 s of inactivity */
-    let idleTimer = null;
+    /* ── Idle timer ────────────────────────────────────────────────────────── */
 
     const resetIdleTimer = () => {
         clearTimeout(idleTimer);
@@ -102,9 +120,135 @@
 
     const cancelIdleTimer = () => clearTimeout(idleTimer);
 
-    /* Hover expand */
-    let hoverCloseTimer = null;
+    /* ── Dropdown rendering ────────────────────────────────────────────────── */
 
+    const buildRow = (label, sublabel, url, iconClass) => {
+        const a = document.createElement('a');
+        a.href = url;
+        a.className = 'nav-search-row';
+        a.setAttribute('role', 'option');
+
+        const icon = document.createElement('i');
+        icon.className = iconClass;
+
+        const nameSpan = document.createElement('span');
+        nameSpan.className = 'nav-search-row__name';
+        nameSpan.textContent = label;
+
+        a.appendChild(icon);
+        a.appendChild(nameSpan);
+
+        if (sublabel) {
+            const subSpan = document.createElement('span');
+            subSpan.className = 'nav-search-row__sub';
+            subSpan.textContent = sublabel;
+            a.appendChild(subSpan);
+        }
+
+        return a;
+    };
+
+    const renderResults = (data) => {
+        lastResults = data;
+        dropdown.innerHTML = '';
+
+        const { categories, products } = data;
+
+        if (categories.length === 0 && products.length === 0) {
+            const msg = document.createElement('p');
+            msg.className = 'nav-search-empty';
+            msg.textContent = nav.dataset.noMatch || 'No matches found';
+            dropdown.appendChild(msg);
+            dropdown.classList.add('nav-search-dropdown--visible');
+            return;
+        }
+
+        if (categories.length) {
+            const hdr = document.createElement('p');
+            hdr.className = 'nav-search-group';
+            hdr.textContent = nav.dataset.labelCategories || 'Categories';
+            dropdown.appendChild(hdr);
+            categories.forEach(c => dropdown.appendChild(buildRow(c.name, null, c.url, 'bi bi-grid-3x3-gap')));
+        }
+
+        if (products.length) {
+            const hdr = document.createElement('p');
+            hdr.className = 'nav-search-group';
+            hdr.textContent = nav.dataset.labelProducts || 'Products';
+            dropdown.appendChild(hdr);
+            products.forEach(p => dropdown.appendChild(buildRow(p.name, p.category, p.url, 'bi bi-box-seam')));
+        }
+
+        dropdown.classList.add('nav-search-dropdown--visible');
+    };
+
+    /* ── Fetch suggestions (debounced) ─────────────────────────────────────── */
+
+    const fetchSuggestions = (q) => {
+        clearTimeout(debounceTimer);
+        if (q.length < 2) { hideDropdown(); return; }
+        debounceTimer = setTimeout(async () => {
+            try {
+                const res  = await fetch(`${suggestUrl}?q=${encodeURIComponent(q)}`);
+                const data = await res.json();
+                renderResults(data);
+            } catch (_) { /* network error — fail silently */ }
+        }, 220);
+    };
+
+    /* ── Enter-key smart routing ───────────────────────────────────────────── */
+
+    const handleEnter = (e) => {
+        if (e.key !== 'Enter') return;
+        e.preventDefault();
+
+        const { categories, products } = lastResults;
+        const total = categories.length + products.length;
+
+        if (total === 0) {
+            /* nothing found — stay, keep showing dropdown */
+            return;
+        }
+
+        if (categories.length === 1 && products.length === 0) {
+            window.location.href = categories[0].url;
+            return;
+        }
+
+        if (products.length === 1 && categories.length === 0) {
+            window.location.href = products[0].url;
+            return;
+        }
+
+        /* multiple results — go to product list with search query */
+        const q = input.value.trim();
+        if (q) {
+            window.location.href = `${form.action}?q=${encodeURIComponent(q)}`;
+        }
+    };
+
+    /* ── Event wiring ──────────────────────────────────────────────────────── */
+
+    input.addEventListener('input', () => {
+        const q = input.value.trim();
+        if (q) {
+            fetchSuggestions(q);
+            resetIdleTimer();
+        } else {
+            hideDropdown();
+            cancelIdleTimer();
+        }
+    });
+
+    input.addEventListener('keydown', handleEnter);
+
+    toggle.addEventListener('click', () => {
+        nav.classList.contains('search-open') ? closeSearch() : openSearch();
+    });
+
+    closeBtn.addEventListener('click', closeSearch);
+
+    /* Hover expand */
     searchItem.addEventListener('mouseenter', () => {
         clearTimeout(hoverCloseTimer);
         cancelIdleTimer();
@@ -112,8 +256,6 @@
     });
 
     searchItem.addEventListener('mouseleave', () => {
-        /* Do not close while input is focused — browser autocomplete dropdown
-           lives outside the DOM and fires mouseleave on the search item. */
         if (nav.classList.contains('search-open') || document.activeElement === input) return;
         if (input.value.trim() === '') {
             hoverCloseTimer = setTimeout(closeSearch, 200);
@@ -122,21 +264,12 @@
         }
     });
 
-    input.addEventListener('input', () => {
-        input.value.trim() ? resetIdleTimer() : cancelIdleTimer();
-    });
-
-    toggle.addEventListener('click', () => {
-        nav.classList.contains('search-open') ? closeSearch() : openSearch();
-    });
-
-    closeBtn.addEventListener('click', closeSearch);
-
-    /* Click outside — delay so browser autocomplete fill is captured first */
+    /* Click outside */
     document.addEventListener('click', (e) => {
         if (!nav.classList.contains('search-open') || searchItem.contains(e.target)) return;
         setTimeout(() => {
             if (input.value.trim() === '') closeSearch();
+            else hideDropdown();
         }, 50);
     });
 
