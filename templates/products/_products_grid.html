@@ -2,71 +2,129 @@
 <div class="container">
     <div class="row gy-4">
 
+        <!-- ── Sidebar ──────────────────────────────────────────────────── -->
         <div class="col-lg-3 col-md-4">
             <div class="product-filter-panel">
-                <h6 class="product-filter-panel__heading">{% trans "Categories" %}</h6>
-                <ul class="product-filter-panel__list">
+
+                <!-- Categories -->
+                <p class="product-filter-panel__heading">{% trans "Categories" %}</p>
+                <input type="search" id="category-filter" class="form-control form-control-sm mb-2"
+                       placeholder="{% trans 'Filter categories…' %}" autocomplete="off">
+                <ul class="product-filter-panel__list mb-0" id="category-list">
+                    <li>
+                        <a href="{% url 'products:list' %}"
+                           class="product-filter-panel__link js-filter-nav{% if not category %} active{% endif %}">
+                            {% trans "All Products" %}
+                        </a>
+                    </li>
                     {% for cat in all_categories %}
                     <li>
                         <a href="{% url 'products:category' cat.slug %}"
-                           class="product-filter-panel__link js-category-link{% if cat.slug == category.slug %} active{% endif %}">
+                           class="product-filter-panel__link js-filter-nav{% if category and cat.slug == category.slug %} active{% endif %}">
                             {{ cat.name }}
                         </a>
                     </li>
                     {% endfor %}
                 </ul>
+
+                {% if all_certifications %}
+                <hr class="product-filter-panel__divider">
+                <p class="product-filter-panel__heading">{% trans "Certifications" %}</p>
+                <ul class="product-filter-panel__list mb-0">
+                    {% for cert in all_certifications %}
+                    <li>
+                        <label class="product-filter-check">
+                            <input type="checkbox" class="js-filter-cert" value="{{ cert.slug }}"
+                                   {% if cert.slug in active_certs %}checked{% endif %}>
+                            {{ cert.name }}
+                        </label>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+
+                {% if all_applications %}
+                <hr class="product-filter-panel__divider">
+                <p class="product-filter-panel__heading">{% trans "Applications" %}</p>
+                <ul class="product-filter-panel__list mb-0">
+                    {% for app in all_applications %}
+                    <li>
+                        <label class="product-filter-check">
+                            <input type="checkbox" class="js-filter-app" value="{{ app.slug }}"
+                                   {% if app.slug in active_apps %}checked{% endif %}>
+                            {{ app.name }}
+                        </label>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+
+                {% if origin_choices %}
+                <hr class="product-filter-panel__divider">
+                <p class="product-filter-panel__heading">{% trans "Origin" %}</p>
+                <ul class="product-filter-panel__list mb-0">
+                    {% for value, label in origin_choices %}
+                    <li>
+                        <label class="product-filter-check">
+                            <input type="radio" name="origin-radio" class="js-filter-origin" value="{{ value }}"
+                                   {% if active_origin == value %}checked{% endif %}>
+                            {{ label }}
+                        </label>
+                    </li>
+                    {% endfor %}
+                    {% if active_origin %}
+                    <li>
+                        <button type="button" class="btn btn-link btn-sm p-0 text-muted js-clear-origin">
+                            {% trans "Clear origin" %}
+                        </button>
+                    </li>
+                    {% endif %}
+                </ul>
+                {% endif %}
+
             </div>
         </div>
 
+        <!-- ── Main content ─────────────────────────────────────────────── -->
         <div class="col-lg-9 col-md-8">
+
             <form method="get" class="mb-4 js-product-search">
                 <div class="input-group">
                     <input type="text" name="q" value="{{ q }}" class="form-control"
-                           placeholder="{% trans 'Search products…' %}">
+                           placeholder="{% trans 'Search by name, CAS number, E-number…' %}">
                     <button class="btn btn-gfi-primary" type="submit">
                         <i class="bi bi-search"></i>
                     </button>
                     {% if q %}
-                    <a href="{% url 'products:category' category.slug %}" class="btn btn-outline-secondary js-category-link">
+                    <a href="{% if category %}{% url 'products:category' category.slug %}{% else %}{% url 'products:list' %}{% endif %}"
+                       class="btn btn-outline-secondary js-filter-nav">
                         {% trans "Clear" %}
                     </a>
                     {% endif %}
                 </div>
             </form>
 
-            {% if products %}
-            <div class="row gy-4">
-                {% for product in products %}
-                <div class="col-sm-6 col-xl-4">
-                    <div class="product-card h-100">
-                        {% if product.image %}
-                        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-card__img">
-                        {% else %}
-                        <img src="{% static 'img/product-placeholder.jpg' %}" alt="{{ product.name }}" class="product-card__img">
-                        {% endif %}
-                        <div class="product-card__body">
-                            <h6 class="product-card__name">{{ product.name }}</h6>
-                            {% if product.description %}
-                            <p class="product-card__desc">{{ product.description|truncatewords:18 }}</p>
-                            {% endif %}
-                            <a href="{% url 'products:detail' category.slug product.slug %}"
-                               class="btn btn-gfi-primary btn-sm mt-auto">
-                                {% trans "View Details" %}
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-            {% else %}
-            <p class="text-muted">
-                {% if q %}
-                {% blocktrans with term=q %}No products found matching "{{ term }}".{% endblocktrans %}
-                {% else %}
-                {% trans "No products in this category yet." %}
+            <!-- Active filter badges -->
+            {% if active_certs or active_apps or active_origin %}
+            <div class="d-flex flex-wrap gap-2 mb-3" id="active-filter-badges">
+                {% for cert in all_certifications %}{% if cert.slug in active_certs %}
+                <span class="badge-filter">{{ cert.name }}</span>
+                {% endif %}{% endfor %}
+                {% for app in all_applications %}{% if app.slug in active_apps %}
+                <span class="badge-filter">{{ app.name }}</span>
+                {% endif %}{% endfor %}
+                {% if active_origin %}
+                {% for value, label in origin_choices %}{% if value == active_origin %}
+                <span class="badge-filter">{{ label }}</span>
+                {% endif %}{% endfor %}
                 {% endif %}
-            </p>
+            </div>
             {% endif %}
+
+            <div class="row gy-4" id="products-grid">
+                {% include "products/_product_cards.html" %}
+            </div>
+
         </div>
 
     </div>

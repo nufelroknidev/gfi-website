@@ -14,26 +14,7 @@
 </section>
 
 <section class="py-5" id="products-section">
-    <div class="container">
-        {% if categories %}
-        <div class="row gy-4">
-            {% for cat in categories %}
-            <div class="col-6 col-sm-4 col-lg-3">
-                <a href="{% url 'products:category' cat.slug %}" class="category-card js-category-link">
-                    {% if cat.image %}
-                    <img src="{{ cat.image.url }}" alt="{{ cat.name }}" class="category-card__img mb-2">
-                    {% else %}
-                    <img src="{% static 'img/category-placeholder.jpg' %}" alt="{{ cat.name }}" class="category-card__img mb-2">
-                    {% endif %}
-                    <p class="category-card__name">{{ cat.name }}</p>
-                </a>
-            </div>
-            {% endfor %}
-        </div>
-        {% else %}
-        <p class="text-muted">{% trans "No product categories are available yet." %}</p>
-        {% endif %}
-    </div>
+    {% include "products/_products_grid.html" %}
 </section>
 
 {% include "includes/cta_products.html" %}

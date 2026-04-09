@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n static %}
 
 {% block title %}{% if product.meta_title %}{{ product.meta_title }}{% else %}{{ product.name }} — {% trans "GFI" %}{% endif %}{% endblock %}
 {% block meta_description %}{% if product.meta_description %}{{ product.meta_description }}{% else %}{% blocktrans with name=product.name %}{{ name }} — food additive available through General Food Industry Co., Ltd.{% endblocktrans %}{% endif %}{% endblock %}
@@ -24,6 +24,7 @@
     <div class="container">
         <div class="row gy-5">
 
+            <!-- Image -->
             <div class="col-md-5">
                 {% if product.image %}
                 <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid rounded">
@@ -32,14 +33,76 @@
                     <span>{% trans "No image available" %}</span>
                 </div>
                 {% endif %}
+
+                {% if product.datasheet %}
+                <a href="{{ product.datasheet.url }}" class="btn btn-outline-secondary w-100 mt-3" target="_blank" rel="noopener">
+                    <i class="bi bi-file-earmark-pdf me-2"></i>{% trans "Download Technical Data Sheet" %}
+                </a>
+                {% endif %}
             </div>
 
+            <!-- Details -->
             <div class="col-md-7">
+
+                <!-- Quick-ID strip -->
+                {% if product.cas_number or product.e_number or product.origin or product.available_forms %}
+                <div class="product-detail__id-strip mb-4">
+                    {% if product.cas_number %}
+                    <div class="product-detail__id-item">
+                        <span class="product-detail__id-label">{% trans "CAS No." %}</span>
+                        <span class="product-detail__id-value">{{ product.cas_number }}</span>
+                    </div>
+                    {% endif %}
+                    {% if product.e_number %}
+                    <div class="product-detail__id-item">
+                        <span class="product-detail__id-label">{% trans "E-Number" %}</span>
+                        <span class="product-detail__id-value">{{ product.e_number }}</span>
+                    </div>
+                    {% endif %}
+                    {% if product.origin %}
+                    <div class="product-detail__id-item">
+                        <span class="product-detail__id-label">{% trans "Origin" %}</span>
+                        <span class="product-detail__id-value">{{ product.get_origin_display }}</span>
+                    </div>
+                    {% endif %}
+                    {% if product.available_forms %}
+                    <div class="product-detail__id-item">
+                        <span class="product-detail__id-label">{% trans "Form" %}</span>
+                        <span class="product-detail__id-value">{{ product.available_forms }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endif %}
 
                 {% if product.description %}
                 <p class="text-muted mb-4">{{ product.description }}</p>
                 {% endif %}
 
+                <!-- Certifications -->
+                {% if product.certifications.exists %}
+                <div class="mb-4">
+                    <p class="product-detail__section-label">{% trans "Certifications" %}</p>
+                    <div class="d-flex flex-wrap gap-2">
+                        {% for cert in product.certifications.all %}
+                        <span class="badge-cert badge-cert--lg">{{ cert.name }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Applications -->
+                {% if product.applications.exists %}
+                <div class="mb-4">
+                    <p class="product-detail__section-label">{% trans "Applications" %}</p>
+                    <div class="d-flex flex-wrap gap-2">
+                        {% for app in product.applications.all %}
+                        <span class="badge-app">{{ app.name }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Specifications -->
                 {% if product.specifications %}
                 <div class="product-detail__specs mb-4">
                     <h6 class="product-detail__specs-heading">{% trans "Specifications" %}</h6>
@@ -55,10 +118,44 @@
                         {% trans "Back to Category" %}
                     </a>
                 </div>
-            </div>
 
+            </div>
         </div>
     </div>
 </section>
+
+<!-- Related products -->
+{% if related %}
+<section class="py-5 bg-white">
+    <div class="container">
+        <h2 class="section-title mb-4">{% trans "More in This Category" %}</h2>
+        <div class="row gy-4">
+            {% for item in related %}
+            <div class="col-sm-6 col-lg-3">
+                <div class="product-card h-100">
+                    {% if item.image %}
+                    <img src="{{ item.image.url }}" alt="{{ item.name }}" class="product-card__img">
+                    {% else %}
+                    <img src="{% static 'img/product-placeholder.jpg' %}" alt="{{ item.name }}" class="product-card__img">
+                    {% endif %}
+                    <div class="product-card__body">
+                        <h6 class="product-card__name">{{ item.name }}</h6>
+                        {% if item.cas_number %}
+                        <p class="product-card__ids"><span>CAS {{ item.cas_number }}</span></p>
+                        {% endif %}
+                        <a href="{% url 'products:detail' item.category.slug item.slug %}"
+                           class="btn btn-gfi-primary btn-sm mt-auto">
+                            {% trans "View Details" %}
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{% include "includes/cta_products.html" %}
 
 {% endblock %}

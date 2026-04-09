@@ -1,0 +1,68 @@
+{% load i18n static %}
+
+{% if not page.object_list %}
+<div class="col-12">
+    <div class="product-empty-state">
+        <i class="bi bi-search product-empty-state__icon"></i>
+        {% if q %}
+        <p class="product-empty-state__title">
+            {% blocktrans with term=q %}No products match "{{ term }}".{% endblocktrans %}
+        </p>
+        <p class="product-empty-state__hint">
+            {% trans "Try a different keyword, a CAS number, or an E-number." %}
+        </p>
+        {% else %}
+        <p class="product-empty-state__title">{% trans "No products match the selected filters." %}</p>
+        <p class="product-empty-state__hint">{% trans "Try removing one or more filters." %}</p>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+
+{% for product in page %}
+<div class="col-sm-6 col-xl-4">
+    <div class="product-card h-100">
+        {% if product.image %}
+        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-card__img">
+        {% else %}
+        <img src="{% static 'img/product-placeholder.jpg' %}" alt="{{ product.name }}" class="product-card__img">
+        {% endif %}
+        <div class="product-card__body">
+            <h6 class="product-card__name">{{ product.name }}</h6>
+
+            {% if product.cas_number or product.e_number %}
+            <p class="product-card__ids">
+                {% if product.cas_number %}<span>CAS {{ product.cas_number }}</span>{% endif %}
+                {% if product.e_number %}<span>{{ product.e_number }}</span>{% endif %}
+            </p>
+            {% endif %}
+
+            {% if product.description %}
+            <p class="product-card__desc">{{ product.description|truncatewords:15 }}</p>
+            {% endif %}
+
+            {% if product.certifications.exists %}
+            <div class="product-card__certs">
+                {% for cert in product.certifications.all %}
+                <span class="badge-cert">{{ cert.name }}</span>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <a href="{% url 'products:detail' product.category.slug product.slug %}"
+               class="btn btn-gfi-primary btn-sm mt-auto">
+                {% trans "View Details" %}
+            </a>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+{% if page.has_next %}
+<div class="col-12 text-center mt-2" id="load-more-container">
+    <button class="btn btn-outline-secondary js-load-more"
+            data-next-page="{{ page.next_page_number }}">
+        {% trans "Show More" %}
+    </button>
+</div>
+{% endif %}
