@@ -1,6 +1,7 @@
 from unittest.mock import patch
 
 from django.test import TestCase
+from django.urls import reverse
 
 from apps.contact.models import Inquiry
 
@@ -29,7 +30,7 @@ class InquiryModelTests(TestCase):
 class ContactFormSubmissionTests(TestCase):
 
     def test_valid_form_saves_to_db(self):
-        response = self.client.post('/en/contact/', {
+        response = self.client.post(reverse('contact:inquiry'), {
             'name': 'John Smith',
             'email': 'john@example.com',
             'subject': 'Product availability',
@@ -38,7 +39,7 @@ class ContactFormSubmissionTests(TestCase):
         self.assertEqual(Inquiry.objects.count(), 1)
 
     def test_valid_form_redirects(self):
-        response = self.client.post('/en/contact/', {
+        response = self.client.post(reverse('contact:inquiry'), {
             'name': 'John Smith',
             'email': 'john@example.com',
             'subject': 'Product availability',
@@ -47,7 +48,7 @@ class ContactFormSubmissionTests(TestCase):
         self.assertEqual(response.status_code, 302)
 
     def test_invalid_form_does_not_save(self):
-        self.client.post('/en/contact/', {
+        self.client.post(reverse('contact:inquiry'), {
             'name': '',
             'email': 'not-an-email',
             'subject': '',
@@ -57,7 +58,7 @@ class ContactFormSubmissionTests(TestCase):
 
     @patch('apps.contact.views.send_mail')
     def test_valid_form_triggers_email(self, mock_send_mail):
-        self.client.post('/en/contact/', {
+        self.client.post(reverse('contact:inquiry'), {
             'name': 'John Smith',
             'email': 'john@example.com',
             'subject': 'Product availability',

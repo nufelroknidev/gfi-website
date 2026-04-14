@@ -47,18 +47,18 @@ class NewsViewTests(TestCase):
         )
 
     def test_news_list_returns_200(self):
-        response = self.client.get('/en/news/')
+        response = self.client.get(reverse('news:list'))
         self.assertEqual(response.status_code, 200)
 
     def test_news_list_shows_only_published(self):
-        response = self.client.get('/en/news/')
+        response = self.client.get(reverse('news:list'))
         self.assertContains(response, 'Published Post')
         self.assertNotContains(response, 'Draft Post')
 
     def test_news_detail_returns_200(self):
-        response = self.client.get('/en/news/published-post/')
+        response = self.client.get(reverse('news:detail', args=['published-post']))
         self.assertEqual(response.status_code, 200)
 
     def test_news_detail_unpublished_returns_404(self):
-        response = self.client.get('/en/news/draft-post/')
+        response = self.client.get(reverse('news:detail', args=['draft-post']))
         self.assertEqual(response.status_code, 404)

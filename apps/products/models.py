@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.urls import reverse
 
@@ -42,6 +43,13 @@ class Category(models.Model):
     class Meta:
         verbose_name_plural = "Categories"
         ordering = ["order", "name"]
+
+    # Slugs that would shadow fixed routes under /products/
+    _RESERVED_SLUGS = {'search', 'api'}
+
+    def clean(self):
+        if self.slug in self._RESERVED_SLUGS:
+            raise ValidationError({'slug': f'"{self.slug}" is a reserved URL segment and cannot be used as a category slug.'})
 
     def __str__(self):
         return self.name

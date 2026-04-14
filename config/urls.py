@@ -31,7 +31,7 @@ urlpatterns += i18n_patterns(
     path('products/', include('apps.products.urls')),
     path('news/', include('apps.news.urls')),
     path('contact/', include('apps.contact.urls')),
-    prefix_default_language=True,
+    prefix_default_language=False,
 )
 
 if settings.DEBUG:

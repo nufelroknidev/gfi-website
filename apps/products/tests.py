@@ -14,6 +14,12 @@ class CategoryModelTests(TestCase):
         with self.assertRaises(Exception):
             category.full_clean()
 
+    def test_category_rejects_reserved_slugs(self):
+        for slug in ('search', 'api'):
+            category = Category(name='Test', slug=slug)
+            with self.assertRaises(Exception):
+                category.full_clean()
+
 
 class ProductModelTests(TestCase):
 
@@ -34,7 +40,8 @@ class ProductModelTests(TestCase):
             name='Stevia Extract',
             slug='stevia-extract',
         )
-        self.assertEqual(product.get_absolute_url(), '/en/products/sweeteners/stevia-extract/')
+        from django.urls import reverse
+        self.assertEqual(product.get_absolute_url(), reverse('products:detail', args=['sweeteners', 'stevia-extract']))
 
     def test_product_inactive_by_default_is_active(self):
         product = Product.objects.create(
