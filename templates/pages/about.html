@@ -105,21 +105,21 @@
         <div class="map-embed-wrap">
             <iframe
                 class="map-embed__frame"
-                src="https://maps.google.com/maps?q=Bangkok,+Thailand&z=13&output=embed"
+                src="{{ SITE_SETTINGS.map_embed_url|default:'https://maps.google.com/maps?q=Bangkok,+Thailand&z=13&output=embed' }}"
                 allowfullscreen
                 loading="lazy"
                 referrerpolicy="no-referrer-when-downgrade"
-                title="GFI location — Bangkok, Thailand">
+                title="GFI location — {{ SITE_SETTINGS.address|default:'Bangkok, Thailand' }}">
             </iframe>
             <div class="map-embed__card">
                 <div class="map-embed__card-icon">
                     <i class="bi bi-geo-alt-fill"></i>
                 </div>
                 <div>
-                    <p class="map-embed__card-title">Bangkok, Thailand</p>
-                    <p class="map-embed__card-sub">Serving Southeast Asia</p>
-                    <a href="https://maps.google.com/?q=Bangkok,+Thailand" target="_blank" rel="noopener noreferrer" class="map-embed__card-link">
-                        Get Directions <i class="bi bi-arrow-up-right-circle-fill"></i>
+                    <p class="map-embed__card-title">{{ SITE_SETTINGS.address|default:'Bangkok, Thailand' }}</p>
+                    <p class="map-embed__card-sub">{% trans "Serving Southeast Asia" %}</p>
+                    <a href="{{ SITE_SETTINGS.map_url|default:'https://maps.google.com/?q=Bangkok,+Thailand' }}" target="_blank" rel="noopener noreferrer" class="map-embed__card-link">
+                        {% trans "Get Directions" %} <i class="bi bi-arrow-up-right-circle-fill"></i>
                     </a>
                 </div>
             </div>

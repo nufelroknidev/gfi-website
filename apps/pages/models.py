@@ -24,7 +24,12 @@ class SiteSettings(models.Model):
     map_url = models.URLField(
         max_length=500,
         blank=True,
-        help_text="Google Maps link for the office location. Paste the share URL from Google Maps (e.g. https://maps.google.com/?q=...).",
+        help_text="Google Maps share link for the 'Get Directions' button (e.g. https://maps.google.com/?q=...). Use the Share → Copy link option in Google Maps.",
+    )
+    map_embed_url = models.URLField(
+        max_length=500,
+        blank=True,
+        help_text="Google Maps embed URL for the map shown on the About page. In Google Maps, click Share → Embed a map → copy only the URL from the src=\"...\" part of the code.",
     )
 
     # Social media — leave blank to hide the icon from the website

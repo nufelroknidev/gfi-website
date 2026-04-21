@@ -13,8 +13,13 @@ class SiteSettingsAdmin(admin.ModelAdmin):
             "description": "These values appear in the top bar and on the contact page.",
         }),
         ("Location", {
-            "fields": ("address", "map_url"),
-            "description": "Office address shown in the footer. Paste a Google Maps share URL to make it clickable.",
+            "fields": ("address", "map_url", "map_embed_url"),
+            "description": (
+                "Address appears in the footer. "
+                "'Map URL' is the share link for the Get Directions button. "
+                "'Map embed URL' is the src URL for the embedded map on the About page "
+                "(Google Maps → Share → Embed a map → copy the URL from src=\"...\")."
+            ),
         }),
         ("Social Media", {
             "fields": ("linkedin_url", "facebook_url", "instagram_url", "twitter_url", "youtube_url", "tiktok_url", "whatsapp_url", "line_url", "wechat_id"),
