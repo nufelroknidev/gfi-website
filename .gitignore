@@ -63,6 +63,10 @@ coverage.xml
 # Static files collected
 staticfiles/
 
+# Product scraper — raw output and local backups (not for version control)
+scrape_output.json
+products_backup_*.json
+
 # Jupyter
 .ipynb_checkpoints
 
