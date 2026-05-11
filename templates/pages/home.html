@@ -81,28 +81,28 @@
             <div class="col-sm-6 col-lg-3">
                 <div class="feature-card">
                     <i class="bi bi-globe2 feature-card__icon"></i>
-                    <h5 class="feature-card__title">Import Sourcing</h5>
+                    <h3 class="feature-card__title">Import Sourcing</h3>
                     <p class="feature-card__text">Certified food additives and ingredients sourced from trusted global suppliers.</p>
                 </div>
             </div>
             <div class="col-sm-6 col-lg-3">
                 <div class="feature-card">
                     <i class="bi bi-truck feature-card__icon"></i>
-                    <h5 class="feature-card__title">Export Distribution</h5>
+                    <h3 class="feature-card__title">Export Distribution</h3>
                     <p class="feature-card__text">Reliable export and regional distribution to food manufacturers across Southeast Asia.</p>
                 </div>
             </div>
             <div class="col-sm-6 col-lg-3">
                 <div class="feature-card">
                     <i class="bi bi-building feature-card__icon"></i>
-                    <h5 class="feature-card__title">Warehousing</h5>
+                    <h3 class="feature-card__title">Warehousing</h3>
                     <p class="feature-card__text">Temperature-controlled storage facilities that maintain product quality and compliance.</p>
                 </div>
             </div>
             <div class="col-sm-6 col-lg-3">
                 <div class="feature-card">
                     <i class="bi bi-person-gear feature-card__icon"></i>
-                    <h5 class="feature-card__title">Technical Support</h5>
+                    <h3 class="feature-card__title">Technical Support</h3>
                     <p class="feature-card__text">Product specification guidance and regulatory documentation support for your team.</p>
                 </div>
             </div>
@@ -201,6 +201,12 @@
 {% endblock %}
 
 {% block extra_head %}
+{% load static %}
+{% if hero_slides %}
+<link rel="preload" as="image" href="{{ hero_slides.0.image.url }}" fetchpriority="high">
+{% else %}
+<link rel="preload" as="image" href="{% static 'img/hero-1.webp' %}" fetchpriority="high">
+{% endif %}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",

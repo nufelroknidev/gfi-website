@@ -31,14 +31,14 @@
 
 .btn-gfi-gold {
     background-color: var(--gfi-vivid-gold);
-    color: #fff;
+    color: var(--gfi-text);
     border: none;
 }
 
 .btn-gfi-gold:hover,
 .btn-gfi-gold:focus {
     background-color: var(--gfi-vivid-gold-dark);
-    color: #fff;
+    color: var(--gfi-text);
     transform: translateY(-2px);
     box-shadow: 0 4px 16px rgba(201, 162, 39, 0.30);
 }

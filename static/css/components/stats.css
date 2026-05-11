@@ -30,7 +30,7 @@
 }
 
 .stat-number {
-    color: var(--gfi-vivid-gold);
+    color: var(--gfi-app-text);
     font-weight: 700;
     line-height: 1;
     font-size: 3.25rem;

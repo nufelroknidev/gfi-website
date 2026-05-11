@@ -67,10 +67,14 @@
     const collapseEl = document.getElementById('gfiNavbar');
 
     if (mobileSearchBtn && mobileSearchBar && mobileSearchInput) {
+        const mobileSearchSubmit = mobileSearchBar.querySelector('button[type="submit"]');
+
         const openMobileSearch = () => {
             mobileSearchBar.classList.add('is-open');
             mobileSearchBar.setAttribute('aria-hidden', 'false');
             mobileSearchBtn.setAttribute('aria-expanded', 'true');
+            mobileSearchInput.removeAttribute('tabindex');
+            if (mobileSearchSubmit) mobileSearchSubmit.removeAttribute('tabindex');
             mobileSearchInput.focus();
             // Close burger menu if open
             if (collapseEl && collapseEl.classList.contains('show')) {
@@ -83,6 +87,8 @@
             mobileSearchBar.classList.remove('is-open');
             mobileSearchBar.setAttribute('aria-hidden', 'true');
             mobileSearchBtn.setAttribute('aria-expanded', 'false');
+            mobileSearchInput.setAttribute('tabindex', '-1');
+            if (mobileSearchSubmit) mobileSearchSubmit.setAttribute('tabindex', '-1');
         };
 
         mobileSearchBtn.addEventListener('click', () => {
